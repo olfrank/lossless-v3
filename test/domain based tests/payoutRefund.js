@@ -14,12 +14,15 @@ const scriptName = path.basename(__filename, '.js');
 
 describe(scriptName, () => {
   beforeEach(async () => {
+
     adr = await setupAddresses();
+
     env = await setupEnvironment(adr.lssAdmin,
       adr.lssRecoveryAdmin,
       adr.lssPauseAdmin,
       adr.lssInitialHolder,
       adr.lssBackupAdmin);
+
     lerc20Token = await setupToken(2000000,
       'Random Token',
       'RAND',
@@ -28,6 +31,7 @@ describe(scriptName, () => {
       adr.lerc20BackupAdmin.address,
       Number(time.duration.days(1)),
       env.lssController.address);
+
     reportedToken = await setupToken(2000000,
       'Reported Token',
       'REPORT',
@@ -61,6 +65,7 @@ describe(scriptName, () => {
       .report(lerc20Token.address, adr.maliciousActor1.address);
     await env.lssReporting.connect(adr.reporter1)
       .report(lerc20Token.address, reportedToken.address);
+      
   });
 
   describe('when everyone votes negatively', () => {

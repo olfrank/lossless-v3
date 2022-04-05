@@ -556,6 +556,13 @@ contract LosslessGovernance is ILssGovernance, Initializable, AccessControlUpgra
         return false;
     }
 
+    /// @notice this lets an erroneously reported CONTRACT ACCOUNT retrieve compensation
+    function retrieveCompensationContractClaim() override public whenNotPaused{
+        require(isContract(msg.sender), "LSS: Must be called by a CA");
+
+        retrieveCompensation();
+    }
+
     /// @notice This lets an erroneously reported account to retrieve compensation
     function retrieveCompensation() override public whenNotPaused {
         require(!compensation[msg.sender].payed, "LSS: Already retrieved");
