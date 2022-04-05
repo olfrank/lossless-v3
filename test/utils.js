@@ -176,7 +176,7 @@ const setupEnvironment = async (
     { initializer: 'initialize' },
   );
 
-  testMaliciousContract = await TestMaliciousContract.deploy(env.lssGovernance.address)
+  testMaliciousContract = await TestMaliciousContract.deploy(lssGovernance.address)
 
   await lssGovernance.connect(lssAdmin).setCompensationAmount(2);
 

@@ -81,12 +81,12 @@ describe(scriptName, () => {
       await env.lssGovernance.connect(adr.member4).committeeMemberVote(1, false);
 
 
-      await env.lssGovernance.connect(adr.lssAdmin).losslessVote(2, false);
-      await env.lssGovernance.connect(adr.lerc20Admin).tokenOwnersVote(2, false);
-      await env.lssGovernance.connect(adr.member1).committeeMemberVote(2, false);
-      await env.lssGovernance.connect(adr.member2).committeeMemberVote(2, false);
-      await env.lssGovernance.connect(adr.member3).committeeMemberVote(2, false);
-      await env.lssGovernance.connect(adr.member4).committeeMemberVote(2, false);
+      await env.lssGovernance.connect(adr.lssAdmin).losslessVote(3, false);
+      await env.lssGovernance.connect(adr.lerc20Admin).tokenOwnersVote(3, false);
+      await env.lssGovernance.connect(adr.member1).committeeMemberVote(3, false);
+      await env.lssGovernance.connect(adr.member2).committeeMemberVote(3, false);
+      await env.lssGovernance.connect(adr.member3).committeeMemberVote(3, false);
+      await env.lssGovernance.connect(adr.member4).committeeMemberVote(3, false);
     });
 
     it('should let reported address retrieve compensation', async () => {
@@ -133,18 +133,21 @@ describe(scriptName, () => {
         20,
       );
 
-      await env.lssGovernance.connect(adr.lssAdmin).resolveReport(2);
+      await env.lssGovernance.connect(adr.lssAdmin).resolveReport(3);
 
       await expect(
         env.lssGovernance.connect(adr.maliciousActor1).retrieveContractCompensation()
       ).to.be.revertedWith("LSS: Must be called by a CA");
 
       await expect(
-        env.lssGovernance.connect(testMaliciousContract.address).retrieveContractCompensation()
+        testMaliciousContract.connect(adr.maliciousActor1).testRetrieveCompensationContractClaim()
       ).to.emit(env.lssGovernance, 'CompensationRetrieval').withArgs(
         testMaliciousContract.address,
         20,
       )
+      
+
+      
 
       
 
@@ -192,13 +195,13 @@ describe(scriptName, () => {
         await env.lssGovernance.reportResolution(1),
       ).to.be.equal(false);
 
-      await expect(
-        env.lssGovernance.connect(adr.maliciousActor1).retrieveCompensation(),
-      ).to.not.be.reverted;
+      // await expect(
+      //   env.lssGovernance.connect(adr.maliciousActor1).retrieveCompensation(),
+      // ).to.not.be.reverted;
 
       await expect(
-        env.lssGovernance.connect(adr.maliciousActor1).retrieveCompensation(),
-      ).to.be.revertedWith('LSS: Already retrieved');
+        env.lssGovernance.connect(adr.maliciousActor1).retrieveContractCompensation(),
+      ).to.be.revertedWith('LSS: Must be called by a CA');
     });
 
     it('should revert if other than the afflicted tries to retrieve', async () => {
@@ -307,14 +310,14 @@ describe(scriptName, () => {
       await env.lssReporting.connect(adr.reporter1)
         .report(lerc20Token.address, adr.maliciousActor1.address);
 
-      await env.lssGovernance.connect(adr.lssAdmin).losslessVote(3, false);
-      await env.lssGovernance.connect(adr.lerc20Admin).tokenOwnersVote(3, false);
-      await env.lssGovernance.connect(adr.member1).committeeMemberVote(3, false);
-      await env.lssGovernance.connect(adr.member2).committeeMemberVote(3, false);
-      await env.lssGovernance.connect(adr.member3).committeeMemberVote(3, false);
-      await env.lssGovernance.connect(adr.member4).committeeMemberVote(3, false);
+      await env.lssGovernance.connect(adr.lssAdmin).losslessVote(4, false);
+      await env.lssGovernance.connect(adr.lerc20Admin).tokenOwnersVote(4, false);
+      await env.lssGovernance.connect(adr.member1).committeeMemberVote(4, false);
+      await env.lssGovernance.connect(adr.member2).committeeMemberVote(4, false);
+      await env.lssGovernance.connect(adr.member3).committeeMemberVote(4, false);
+      await env.lssGovernance.connect(adr.member4).committeeMemberVote(4, false);
 
-      await env.lssGovernance.connect(adr.lssAdmin).resolveReport(3);
+      await env.lssGovernance.connect(adr.lssAdmin).resolveReport(4);
     });
 
     it('should let the address retrieve compensation twice', async () => {
