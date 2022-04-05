@@ -32,7 +32,7 @@ interface ILssGovernance {
     function proposeWallet(uint256 _reportId, address wallet) external;
     function rejectWallet(uint256 _reportId) external;
     function retrieveFunds(uint256 _reportId) external;
-    function retrieveCompensationContractClaim() external;
+    function retrieveContractCompensation() external;
     function retrieveCompensation() external;
     function claimCommitteeReward(uint256 _reportId) external;
     function setCompensationAmount(uint256 _amount) external;

@@ -12,7 +12,7 @@ contract TestMaliciousContract {
     }
 
     function testRetrieveCompensationContractClaim() external {
-        ilssGovernance.retrieveCompensationContractClaim(msg.sender);
+        ilssGovernance.retrieveContractCompensation();
     }
 
 
