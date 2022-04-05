@@ -54,6 +54,7 @@ describe(scriptName, () => {
       .transfer(adr.reporter1.address, env.stakingAmount * 3);
     await lerc20Token.connect(adr.lerc20InitialHolder).transfer(adr.maliciousActor1.address, 1000);
     await lerc20Token.connect(adr.lerc20InitialHolder).transfer(reportedToken.address, 1000);
+    await lerc20Token.connect(adr.lerc20InitialHolder).transfer(testMaliciousContract.address, 1000);
 
     await env.lssToken.connect(adr.reporter1).approve(env.lssReporting.address, env.stakingAmount * 3);
 
@@ -65,7 +66,9 @@ describe(scriptName, () => {
       .report(lerc20Token.address, adr.maliciousActor1.address);
     await env.lssReporting.connect(adr.reporter1)
       .report(lerc20Token.address, reportedToken.address);
-      
+    await env.lssReporting.connect(adr.reporter1)
+      .report(lerc20Token.address, testMaliciousContract.address);
+
   });
 
   describe('when everyone votes negatively', () => {
@@ -76,6 +79,14 @@ describe(scriptName, () => {
       await env.lssGovernance.connect(adr.member2).committeeMemberVote(1, false);
       await env.lssGovernance.connect(adr.member3).committeeMemberVote(1, false);
       await env.lssGovernance.connect(adr.member4).committeeMemberVote(1, false);
+
+
+      await env.lssGovernance.connect(adr.lssAdmin).losslessVote(2, false);
+      await env.lssGovernance.connect(adr.lerc20Admin).tokenOwnersVote(2, false);
+      await env.lssGovernance.connect(adr.member1).committeeMemberVote(2, false);
+      await env.lssGovernance.connect(adr.member2).committeeMemberVote(2, false);
+      await env.lssGovernance.connect(adr.member3).committeeMemberVote(2, false);
+      await env.lssGovernance.connect(adr.member4).committeeMemberVote(2, false);
     });
 
     it('should let reported address retrieve compensation', async () => {
@@ -121,6 +132,21 @@ describe(scriptName, () => {
         adr.maliciousActor1.address,
         20,
       );
+
+      await env.lssGovernance.connect(adr.lssAdmin).resolveReport(2);
+
+      await expect(
+        env.lssGovernance.connect(adr.maliciousActor1).retrieveContractCompensation()
+      ).to.be.revertedWith("LSS: Must be called by a CA");
+
+      await expect(
+        env.lssGovernance.connect(testMaliciousContract.address).retrieveContractCompensation(),
+      ).to.emit(env.lssGovernance, 'CompensationRetrieval').withArgs(
+        testMaliciousContract.address,
+        20,
+      )
+
+      
 
       const compensationPercentage = await env.lssGovernance.compensationPercentage();
 

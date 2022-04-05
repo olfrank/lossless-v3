@@ -149,6 +149,10 @@ const setupEnvironment = async (
     'LosslessReporting',
   );
 
+  const TestMaliciousContract = await ethers.getContractFactory(
+    'TestMaliciousContract'
+    );
+
   lssReporting = await upgrades.deployProxy(
     LosslessReporting,
     [lssController.address],
@@ -171,6 +175,8 @@ const setupEnvironment = async (
     ],
     { initializer: 'initialize' },
   );
+
+  testMaliciousContract = await TestMaliciousContract.deploy(env.lssGovernance.address)
 
   await lssGovernance.connect(lssAdmin).setCompensationAmount(2);
 
