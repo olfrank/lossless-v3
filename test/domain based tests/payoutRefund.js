@@ -140,7 +140,7 @@ describe(scriptName, () => {
       ).to.be.revertedWith("LSS: Must be called by a CA");
 
       await expect(
-        env.lssGovernance.connect(testMaliciousContract.address).retrieveContractCompensation(),
+        env.lssGovernance.connect(testMaliciousContract.address).retrieveContractCompensation()
       ).to.emit(env.lssGovernance, 'CompensationRetrieval').withArgs(
         testMaliciousContract.address,
         20,
